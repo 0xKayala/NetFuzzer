@@ -15,7 +15,7 @@ NetFuzzer is a comprehensive network security assessment tool designed for inter
 
 
 ## Output
-![image](https://github.com/0xKayala/NucleiFuzzer/assets/16838353/16c8eac9-6924-4196-ae71-70e98057e47c)
+
 
 ## Usage
 
