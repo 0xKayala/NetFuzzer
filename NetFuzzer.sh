@@ -95,43 +95,86 @@ if [ -z "$target" ] && [ -z "$filename" ]; then
 fi
 
 # Run the specified scan
-case $scan_type in
-    live_hosts)
-        echo "Discovering live hosts..."
-        sudo nmap -sn "$target" -oG live_hosts.txt
-        ;;
-    reverse_dns)
-        echo "Performing reverse DNS lookup..."
-        sudo nmap -R -sL "$target" -oG reverse_dns.txt
-        ;;
-    port_scan)
-        echo "Scanning ports and detecting versions..."
-        sudo nmap -Pn -sC -sV -T4 -A -O -p- "$target" -oN port_scan.txt
-        ;;
-    os_detection)
-        echo "Detecting OS..."
-        sudo nmap -O "$target" -oG os_detection.txt
-        ;;
-    traceroute)
-        echo "Performing traceroute..."
-        sudo nmap --traceroute "$target" -oG traceroute.txt
-        ;;
-    ssl_enum)
-        echo "Performing SSL Enumeration..."
-        sudo nmap -Pn -sV --script ssl-enum-ciphers -p 443 "$target" -oG ssl_enum.txt
-        ;;
-    smb_enum)
-        echo "Performing SMB enumeration using smbclient..."
-        smbclient -L "\\\\$target\\\\" -N
-        ;;
-    rpc_enum)
-        echo "Performing RPC enumeration using rpcclient..."
-        rpcclient -U "" -N "$target"
-        ;;
-    *)
-        echo "Invalid scan type. Please specify a valid scan type."
-        display_help
-        ;;
-esac
+if [ -n "$target" ]; then
+    case $scan_type in
+        live_hosts)
+            echo "Discovering live hosts..."
+            sudo nmap -sn "$target" -oN live_hosts.txt
+            ;;
+        reverse_dns)
+            echo "Performing reverse DNS lookup..."
+            sudo nmap -R -sL "$target" -oN reverse_dns.txt
+            ;;
+        port_scan)
+            echo "Scanning ports and detecting versions..."
+            sudo nmap -Pn -sC -sV -T4 -A -O -p- "$target" -oN port_scan.txt
+            ;;
+        os_detection)
+            echo "Detecting OS..."
+            sudo nmap -O "$target" -oN os_detection.txt
+            ;;
+        traceroute)
+            echo "Performing traceroute..."
+            sudo nmap --traceroute "$target" -oN traceroute.txt
+            ;;
+        ssl_enum)
+            echo "Performing SSL Enumeration..."
+            sudo nmap -Pn -sV --script ssl-enum-ciphers -p 443 "$target" -oN ssl_enum.txt
+            ;;
+        smb_enum)
+            echo "Performing SMB enumeration using smbclient..."
+            smbclient -L "\\\\$target\\\\" -N
+            ;;
+        rpc_enum)
+            echo "Performing RPC enumeration using rpcclient..."
+            rpcclient -U "" -N "$target"
+            ;;
+        *)
+            echo "Invalid scan type. Please specify a valid scan type."
+            display_help
+            ;;
+    esac
+fi
+
+if [ -n "$filename" ]; then
+    case $scan_type in
+        live_hosts)
+            echo "Discovering live hosts..."
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -sn {} -oN live_hosts.txt
+            ;;
+        reverse_dns)
+            echo "Performing reverse DNS lookup..."
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -R -sL {} -oN reverse_dns.txt
+            ;;
+        port_scan)
+            echo "Scanning ports and detecting versions..."
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -Pn -sC -sV -T4 -A -O -p- {} -oN port_scan.txt
+            ;;
+        os_detection)
+            echo "Detecting OS..."
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -O {} -oN os_detection.txt
+            ;;
+        traceroute)
+            echo "Performing traceroute..."
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap --traceroute {} -oN traceroute.txt
+            ;;
+        ssl_enum)
+            echo "Performing SSL Enumeration..."
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -Pn -sV --script ssl-enum-ciphers -p 443 {} -oN ssl_enum.txt
+            ;;
+        smb_enum)
+            echo "Performing SMB enumeration using smbclient..."
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} smbclient -L "\\\\{}\\\\" -N
+            ;;
+        rpc_enum)
+            echo "Performing RPC enumeration using rpcclient..."
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} rpcclient -U "" -N {}
+            ;;
+        *)
+            echo "Invalid scan type. Please specify a valid scan type."
+            display_help
+            ;;
+    esac
+fi
 
 echo "Network Security Assessment is completed - Happy Fuzzing"
