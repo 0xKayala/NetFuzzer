@@ -21,21 +21,21 @@ echo -e "${RESET}"
 
 # Help menu
 display_help() {
-    echo -e "NetFuzzer is a comprehensive network security assessment tool for internal/external networks including firewalls, routers, switches, Active Directory, SMBs, etc.\n\n"
-    echo -e "Usage: $0 [options]\n\n"
-    echo "Options:"
-    echo "  -h, --help              Display help information"
-    echo "  -t, --target <target>   Target IP address, range, or hostname"
-    echo "  -f, --filename <file>   File containing list of targets (one per line)"
-    echo "  -s, --scan <scan_type>  Specify the type of scan to run:"
-    echo "                          1. live_hosts - Discover live hosts"
-    echo "                          2. reverse_dns - Perform reverse DNS lookup"
-    echo "                          3. port_scan - Scan ports and detect versions"
-    echo "                          4. os_detection - Detect OS"
-    echo "                          5. traceroute - Perform traceroute"
-    echo "                          6. ssl_enum - Perform SSL enumeration"
-    echo "                          7. smb_enum - Perform SMB enumeration"
-    echo "                          8. rpc_enum - Perform RPC enumeration"
+    >&2 echo -e "NetFuzzer is a comprehensive network security assessment tool for internal/external networks including firewalls, routers, switches, Active Directory, SMBs, etc.\n\n"
+    >&2 echo -e "Usage: $0 [options]\n\n"
+    >&2 echo "Options:"
+    >&2 echo "  -h, --help              Display help information"
+    >&2 echo "  -t, --target <target>   Target IP address, range, or hostname"
+    >&2 echo "  -f, --filename <file>   File containing list of targets (one per line)"
+    >&2 echo "  -s, --scan <scan_type>  Specify the type of scan to run:"
+    >&2 echo "                          1. live_hosts - Discover live hosts"
+    >&2 echo "                          2. reverse_dns - Perform reverse DNS lookup"
+    >&2 echo "                          3. port_scan - Scan ports and detect versions"
+    >&2 echo "                          4. os_detection - Detect OS"
+    >&2 echo "                          5. traceroute - Perform traceroute"
+    >&2 echo "                          6. ssl_enum - Perform SSL enumeration"
+    >&2 echo "                          7. smb_enum - Perform SMB enumeration"
+    >&2 echo "                          8. rpc_enum - Perform RPC enumeration"
     exit 0
 }
 
@@ -54,7 +54,7 @@ fi
 
 # Check if RPC Client is installed, if not, install it
 if ! command -v rpcclient &> /dev/null; then
-    echo "Installing smbclient..."
+    echo "Installing rpcclient..."
     sudo apt -y install smbclient
 fi
 
@@ -71,7 +71,7 @@ do
             shift
             shift
             ;;
-        -f|--file)
+        -f|--filename)
             filename="$2"
             shift
             shift
@@ -177,4 +177,5 @@ if [ -n "$filename" ]; then
     esac
 fi
 
+# End with a general message as the scan is completed
 echo "Network Security Assessment is completed - Happy Fuzzing"
