@@ -4,8 +4,8 @@ NetFuzzer is a comprehensive network security assessment tool designed for inter
 **Important:** Make sure the tools `Nmap`, `smbclient` & `rpcclient` are installed on your machine and executing correctly to use the `NetFuzzer` without any issues.
 
 ### Tools included:
-[Nmap]() ``<br><br>
-[smbclient/rpcclient]() ``
+[Nmap]() `sudo apt -y install nmap`<br><br>
+[smbclient/rpcclient]() `sudo apt -y install smbclient`
 
 ### Templates:
 [Fuzzing Templates](https://github.com/0xKayala/fuzzing-templates) `git clone https://github.com/0xKayala/fuzzing-templates.git`
