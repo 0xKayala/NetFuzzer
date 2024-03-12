@@ -82,6 +82,12 @@ do
     esac
 done
 
+# Ask the user to enter the target IP Address or Hostname
+if [ -z "$target" ]; then
+    echo "Please provide a target IP address or hostname with -t option."
+    display_help
+fi
+
 # Run the specified scan
 case $scan_type in
     live_hosts)
