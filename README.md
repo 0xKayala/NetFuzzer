@@ -1,2 +1,2 @@
 # NetFuzzer
-NetFuzzer is a comprehensive network security assessment tool for internal and external networks, including Firewalls, Routers, Switches, Active Directory, SMBs, Printers, etc.
+NetFuzzer is a comprehensive network security assessment tool designed for internal and external networks. It includes features such as host discovery, port scanning, OS detection, SSL enumeration, and SMB and RPC enumeration. This tool is built on Nmap, smbclient, rpcclient, and other utilities, with potential for additional features in the future. NetFuzzer aims to simplify network security assessments and welcomes collaborations and contributions to enhance its functionality and usability.
