@@ -94,6 +94,23 @@ if [ -z "$target" ] && [ -z "$filename" ]; then
     display_help
 fi
 
+# Convert numeric scan_type to string
+if [[ $scan_type =~ ^[0-9]+$ ]]; then
+    case $scan_type in
+        1) scan_type="live_hosts";;
+        2) scan_type="reverse_dns";;
+        3) scan_type="port_scan";;
+        4) scan_type="os_detection";;
+        5) scan_type="traceroute";;
+        6) scan_type="ssl_enum";;
+        7) scan_type="smb_enum";;
+        8) scan_type="rpc_enum";;
+        *) echo "Invalid scan type. Please specify a valid scan type."
+           display_help
+           ;;
+    esac
+fi
+
 # Run the specified scan
 if [ -n "$target" ]; then
     case $scan_type in
