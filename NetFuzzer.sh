@@ -26,6 +26,7 @@ display_help() {
     echo "Options:"
     echo "  -h, --help              Display help information"
     echo "  -t, --target <target>   Target IP address, range, or hostname"
+    echo "  -f, --filename <file>   File containing list of targets (one per line)"
     echo "  -s, --scan <scan_type>  Specify the type of scan to run:"
     echo "                          1. live_hosts - Discover live hosts"
     echo "                          2. reverse_dns - Perform reverse DNS lookup"
@@ -70,6 +71,11 @@ do
             shift
             shift
             ;;
+        -f|--file)
+            filename="$2"
+            shift
+            shift
+            ;;
         -s|--scan)
             scan_type="$2"
             shift
@@ -83,8 +89,8 @@ do
 done
 
 # Ask the user to enter the target IP Address or Hostname
-if [ -z "$target" ]; then
-    echo "Please provide a target IP address or hostname with -t option."
+if [ -z "$target" ] && [ -z "$filename" ]; then
+    echo "Please provide a target IP address with -t or a file with -f option."
     display_help
 fi
 
