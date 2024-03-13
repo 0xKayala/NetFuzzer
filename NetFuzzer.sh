@@ -58,6 +58,12 @@ if ! command -v rpcclient &> /dev/null; then
     sudo apt -y install smbclient
 fi
 
+# Check if smap is installed, if not, install it
+if ! command -v smap &> /dev/null; then
+    echo "Installing smap..."
+    go install -v github.com/s0md3v/smap/cmd/smap@latest
+fi
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]
 do
@@ -116,27 +122,27 @@ if [ -n "$target" ]; then
     case $scan_type in
         live_hosts)
             echo "Discovering live hosts..."
-            sudo nmap -sn "$target" -oN live_hosts.txt
+            smap -sn "$target" -oN live_hosts.txt
             ;;
         reverse_dns)
             echo "Performing reverse DNS lookup..."
-            sudo nmap -R -sL "$target" -oN reverse_dns.txt
+            smap -R -sL "$target" -oN reverse_dns.txt
             ;;
         port_scan)
             echo "Scanning ports and detecting versions..."
-            sudo nmap -Pn -sC -sV -T4 -A -O -p- "$target" -oN port_scan.txt
+            sudo smap -Pn -sC -sV -T4 -A -O -p0-65535 "$target" -oN port_scan.txt
             ;;
         os_detection)
             echo "Detecting OS..."
-            sudo nmap -O "$target" -oN os_detection.txt
+            smap -O "$target" -oN os_detection.txt
             ;;
         traceroute)
             echo "Performing traceroute..."
-            sudo nmap --traceroute "$target" -oN traceroute.txt
+            smap --traceroute "$target" -oN traceroute.txt
             ;;
         ssl_enum)
             echo "Performing SSL Enumeration..."
-            sudo nmap -Pn -sV --script ssl-enum-ciphers -p 443 "$target" -oN ssl_enum.txt
+            sudo smap -Pn -sV --script ssl-enum-ciphers -p443 "$target" -oN ssl_enum.txt
             ;;
         smb_enum)
             echo "Performing SMB enumeration using smbclient..."
@@ -157,27 +163,27 @@ if [ -n "$filename" ]; then
     case $scan_type in
         live_hosts)
             echo "Discovering live hosts..."
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -sn {} -oN live_hosts.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} smap -sn {} -oN live_hosts.txt
             ;;
         reverse_dns)
             echo "Performing reverse DNS lookup..."
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -R -sL {} -oN reverse_dns.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo smap -R -sL {} -oN reverse_dns.txt
             ;;
         port_scan)
             echo "Scanning ports and detecting versions..."
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -Pn -sC -sV -T4 -A -O -p- {} -oN port_scan.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo smap -Pn -sC -sV -T4 -A -O -p0-65535 {} -oN port_scan.txt
             ;;
         os_detection)
             echo "Detecting OS..."
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -O {} -oN os_detection.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} smap -O {} -oN os_detection.txt
             ;;
         traceroute)
             echo "Performing traceroute..."
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap --traceroute {} -oN traceroute.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} smap --traceroute {} -oN traceroute.txt
             ;;
         ssl_enum)
             echo "Performing SSL Enumeration..."
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -Pn -sV --script ssl-enum-ciphers -p 443 {} -oN ssl_enum.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo smap -Pn -sV --script ssl-enum-ciphers -p443 {} -oN ssl_enum.txt
             ;;
         smb_enum)
             echo "Performing SMB enumeration using smbclient..."
