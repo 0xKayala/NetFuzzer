@@ -36,6 +36,7 @@ display_help() {
     >&2 echo "                          6. ssl_enum - Perform SSL enumeration"
     >&2 echo "                          7. smb_enum - Perform SMB enumeration"
     >&2 echo "                          8. rpc_enum - Perform RPC enumeration"
+    >&2 echo "                          9. vuln_scan - Perform vulnerability scan"
     exit 0
 }
 
@@ -111,6 +112,7 @@ if [[ $scan_type =~ ^[0-9]+$ ]]; then
         6) scan_type="ssl_enum";;
         7) scan_type="smb_enum";;
         8) scan_type="rpc_enum";;
+        9) scan_type="vuln_scan";;
         *) echo "Invalid scan type. Please specify a valid scan type."
            display_help
            ;;
@@ -152,6 +154,10 @@ if [ -n "$target" ]; then
             echo "Performing RPC enumeration using rpcclient on $target"
             rpcclient -U "" -N "$target"
             ;;
+        vuln_scan)
+            echo "Performing vulnerability scan using Nmap on $target"
+            sudo nmap -Pn --script vuln -sV "$target" -oN vuln_scan.txt
+            ;;
         *)
             echo "Invalid scan type. Please specify a valid scan type."
             display_help
@@ -192,6 +198,10 @@ if [ -n "$filename" ]; then
         rpc_enum)
             echo "Performing RPC enumeration using rpcclient on $filename"
             sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} rpcclient -U "" -N {}
+            ;;
+        vuln_scan)
+            echo "Performing vulnerability scan using Nmap on $target"
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -Pn --script vuln -sV "$target" -oN vuln_scan.txt
             ;;
         *)
             echo "Invalid scan type. Please specify a valid scan type."
