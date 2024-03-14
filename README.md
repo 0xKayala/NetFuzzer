@@ -7,9 +7,6 @@ NetFuzzer is a comprehensive network security assessment tool designed for inter
 [Nmap]() `sudo apt -y install nmap`<br><br>
 [smbclient/rpcclient]() `sudo apt -y install smbclient`
 
-### Templates:
-[Fuzzing Templates](https://github.com/0xKayala/fuzzing-templates) `git clone https://github.com/0xKayala/fuzzing-templates.git`
-
 ## Screenshot
 ![image](https://github.com/0xKayala/NetFuzzer/assets/16838353/593cccc0-2502-431d-9412-fa1c76fdb2f0)
 
