@@ -40,6 +40,27 @@ display_help() {
     exit 0
 }
 
+# Get the current user's home directory
+home_dir=$(eval echo ~"$USER")
+
+# Check if nuclei-templates are already cloned.
+if [ ! -d "$home_dir/nuclei-templates" ]; then
+    echo "Cloning nuclei-templates..."
+    git clone https://github.com/projectdiscovery/nuclei-templates.git "$home_dir/nuclei-templates"
+fi
+
+# Check if nuclei is installed, if not, install it
+if ! command -v nuclei &> /dev/null; then
+    echo "Installing Nuclei..."
+    go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+fi
+
+# Check if httpx is installed, if not, install it
+if ! command -v httpx &> /dev/null; then
+    echo "Installing httpx..."
+    go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+fi
+
 # Check if Nmap is installed, if not, install it
 if ! command -v nmap &> /dev/null; then
     echo "Installing Nmap..."
@@ -113,6 +134,7 @@ if [[ $scan_type =~ ^[0-9]+$ ]]; then
         7) scan_type="smb_enum";;
         8) scan_type="rpc_enum";;
         9) scan_type="vuln_scan";;
+        10) scan_type="nuclei_scan";;
         *) echo "Invalid scan type. Please specify a valid scan type."
            display_help
            ;;
@@ -158,6 +180,10 @@ if [ -n "$target" ]; then
             echo "Performing vulnerability scan using Nmap on $target"
             sudo nmap -Pn --script vuln -sV "$target" -oN vuln_scan.txt
             ;;
+        nuclei_scan)
+            echo "Performing Nuclei Scan on $target"
+            nuclei -u "$target" -t "$home_dir/nuclei-templates" -rl 05 -o "nuclei_scan.txt"
+            ;;
         *)
             echo "Invalid scan type. Please specify a valid scan type."
             display_help
@@ -200,8 +226,12 @@ if [ -n "$filename" ]; then
             sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} rpcclient -U "" -N {}
             ;;
         vuln_scan)
-            echo "Performing vulnerability scan using Nmap on $target"
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -Pn --script vuln -sV "$target" -oN vuln_scan.txt
+            echo "Performing vulnerability scan using Nmap on $filename"
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -Pn --script vuln -sV {} -oN vuln_scan.txt
+            ;;
+        nuclei_scan)
+            echo "Performing Nuclei Scan on $filename"
+            nuclei -l "$filename" -t "$home_dir/nuclei-templates" -rl 05 -o "nuclei_scan.txt"
             ;;
         *)
             echo "Invalid scan type. Please specify a valid scan type."
