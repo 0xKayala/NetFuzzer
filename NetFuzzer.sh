@@ -37,6 +37,7 @@ display_help() {
     >&2 echo "                          7. smb_enum - Perform SMB enumeration"
     >&2 echo "                          8. rpc_enum - Perform RPC enumeration"
     >&2 echo "                          9. vuln_scan - Perform vulnerability scan"
+    >&2 echo "                          10. nuclei_scan - Perform Nuclei scan"
     exit 0
 }
 
