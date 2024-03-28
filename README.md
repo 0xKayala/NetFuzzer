@@ -8,7 +8,7 @@ NetFuzzer is a comprehensive network security assessment tool designed for inter
 [smbclient/rpcclient]() `sudo apt -y install smbclient`
 
 ## Screenshot
-![image](https://github.com/0xKayala/NetFuzzer/assets/16838353/593cccc0-2502-431d-9412-fa1c76fdb2f0)
+![image](https://github.com/0xKayala/NetFuzzer/assets/16838353/8cd3a6d5-dff1-4f93-a373-bd9e689055c8)
 
 ## Output
 ![image](https://github.com/0xKayala/NetFuzzer/assets/16838353/297e0cd2-faa9-48c3-b6e4-56a7fec4dfb5)
