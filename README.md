@@ -44,6 +44,8 @@ Options:
                           6. ssl_enum - Perform SSL enumeration
                           7. smb_enum - Perform SMB enumeration
                           8. rpc_enum - Perform RPC enumeration
+                          9. vuln_scan - Perform vulnerability scan"
+                          10. nuclei_scan - Perform Nuclei scan"
 ```  
 
 ## Installation:
