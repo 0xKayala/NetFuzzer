@@ -57,5 +57,5 @@ git clone https://github.com/0xKayala/NetFuzzer.git
 cd NetFuzzer
 sudo chmod +x install.sh
 ./install.sh
-nf -h
+netfuzzer -h
 ```
