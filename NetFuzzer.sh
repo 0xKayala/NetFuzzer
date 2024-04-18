@@ -155,7 +155,7 @@ if [ -n "$target" ]; then
             ;;
         port_scan)
             echo "Scanning ports and detecting versions of $target"
-            sudo nmap -Pn -sC -sV -T4 -A -O -p- "$target" -oN port_scan.txt
+            sudo nmap -Pn -sC -sV -T4 -A -O "$target" -oN port_scan.txt
             ;;
         os_detection)
             echo "Detecting OS of $target"
@@ -171,7 +171,7 @@ if [ -n "$target" ]; then
             ;;
         smb_enum)
             echo "Performing SMB enumeration using smbclient on $target"
-            smbclient -L "\\\\$target\\\\" -N
+            smbclient -L "\\$target//"
             ;;
         rpc_enum)
             echo "Performing RPC enumeration using rpcclient on $target"
