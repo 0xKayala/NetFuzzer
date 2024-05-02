@@ -147,11 +147,11 @@ if [ -n "$target" ]; then
     case $scan_type in
         live_hosts)
             echo "Discovering live hosts of $target"
-            sudo nmap -sn "$target" -oN live_hosts.txt
+            nmap -sn "$target" -oN live_hosts.txt
             ;;
         reverse_dns)
             echo "Performing reverse DNS lookup on $target"
-            sudo nmap -R -sL "$target" -oN reverse_dns.txt
+            nmap -R -sL "$target" -oN reverse_dns.txt
             ;;
         port_scan)
             echo "Scanning ports and detecting versions of $target"
@@ -159,11 +159,11 @@ if [ -n "$target" ]; then
             ;;
         os_detection)
             echo "Detecting OS of $target"
-            sudo nmap -O "$target" -oN os_detection.txt
+            nmap -O "$target" -oN os_detection.txt
             ;;
         traceroute)
             echo "Performing traceroute on $target"
-            sudo nmap --traceroute "$target" -oN traceroute.txt
+            nmap --traceroute "$target" -oN traceroute.txt
             ;;
         ssl_enum)
             echo "Performing SSL Enumeration on $target"
@@ -196,23 +196,23 @@ if [ -n "$filename" ]; then
     case $scan_type in
         live_hosts)
             echo "Discovering live hosts of $filename"
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -sn {} -oN live_hosts.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} nmap -sn {} -oN live_hosts.txt
             ;;
         reverse_dns)
             echo "Performing reverse DNS lookup on $filename"
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -R -sL {} -oN reverse_dns.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} nmap -R -sL {} -oN reverse_dns.txt
             ;;
         port_scan)
             echo "Scanning ports and detecting versions of $filename"
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -Pn -sC -sV -T4 -A -O -p- {} -oN port_scan.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -Pn -sC -sV -T4 -A -O {} -oN port_scan.txt
             ;;
         os_detection)
             echo "Detecting OS of $filename"
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -O {} -oN os_detection.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} nmap -O {} -oN os_detection.txt
             ;;
         traceroute)
             echo "Performing traceroute on $filename"
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap --traceroute {} -oN traceroute.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} nmap --traceroute {} -oN traceroute.txt
             ;;
         ssl_enum)
             echo "Performing SSL Enumeration on $filename"
@@ -242,4 +242,4 @@ if [ -n "$filename" ]; then
 fi
 
 # End with a general message as the scan is completed
-echo "Network Security Assessment is completed - Happy Fuzzing"
+echo "Network Security Assessment is completed - Happy Scanning"
