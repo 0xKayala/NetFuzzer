@@ -8,11 +8,11 @@ RESET='\033[0m'
 echo -e "${RED}"
 cat << "EOF"
 
-               __  ____                         
-   ____  ___  / /_/ __/_  __________  ___  _____
-  / __ \/ _ \/ __/ /_/ / / /_  /_  / / _ \/ ___/
- / / / /  __/ /_/ __/ /_/ / / /_/ /_/  __/ /    
-/_/ /_/\___/\__/_/  \__,_/ /___/___/\___/_/   v1.0.0
+    _   __     __  ____                         
+   / | / /__  / /_/ __/_  __________  ___  _____
+  /  |/ / _ \/ __/ /_/ / / /_  /_  / / _ \/ ___/
+ / /|  /  __/ /_/ __/ /_/ / / /_/ /_/  __/ /    
+/_/ |_/\___/\__/_/  \__,_/ /___/___/\___/_/   v1.0.1
 
                        Made by Satya Prakash (0xKayala)                
 
@@ -26,7 +26,7 @@ display_help() {
     >&2 echo "Options:"
     >&2 echo "  -h, --help              Display help information"
     >&2 echo "  -t, --target <target>   Target IP address, range, or hostname"
-    >&2 echo "  -f, --filename <file>   File containing list of targets (one per line)"
+    >&2 echo "  -f, --filename <file>   File containing a list of targets (one per line)"
     >&2 echo "  -s, --scan <scan_type>  Specify the type of scan to run:"
     >&2 echo "                          1. live_hosts - Discover live hosts"
     >&2 echo "                          2. reverse_dns - Perform reverse DNS lookup"
