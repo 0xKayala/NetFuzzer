@@ -51,13 +51,13 @@ if [ ! -d "$home_dir/nuclei-templates" ]; then
 fi
 
 # Check if nuclei is installed, if not, install it
-if ! command -v nuclei &> /dev/null; then
+if ! command -v nuclei -up &> /dev/null; then
     echo "Installing Nuclei..."
     go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
 fi
 
 # Check if httpx is installed, if not, install it
-if ! command -v httpx &> /dev/null; then
+if ! command -v httpx -up &> /dev/null; then
     echo "Installing httpx..."
     go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
 fi
@@ -159,7 +159,7 @@ if [ -n "$target" ]; then
             ;;
         os_detection)
             echo "Detecting OS of $target"
-            nmap -O "$target" -oN os_detection.txt
+            sudo nmap -O "$target" -oN os_detection.txt
             ;;
         traceroute)
             echo "Performing traceroute on $target"
@@ -183,7 +183,7 @@ if [ -n "$target" ]; then
             ;;
         nuclei_scan)
             echo "Performing Nuclei Scan on $target"
-            nuclei -u "$target" -t "$home_dir/nuclei-templates" -rl 05 -o "nuclei_scan.txt"
+            nuclei -u "$target" -t "$home_dir/nuclei-templates" -es info -rl 05 -o "nuclei_scan.txt"
             ;;
         *)
             echo "Invalid scan type. Please specify a valid scan type."
@@ -208,7 +208,7 @@ if [ -n "$filename" ]; then
             ;;
         os_detection)
             echo "Detecting OS of $filename"
-            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} nmap -O {} -oN os_detection.txt
+            sort "$filename" | uniq | tee "$filename" | xargs -P10 -I{} sudo nmap -O {} -oN os_detection.txt
             ;;
         traceroute)
             echo "Performing traceroute on $filename"
@@ -232,7 +232,7 @@ if [ -n "$filename" ]; then
             ;;
         nuclei_scan)
             echo "Performing Nuclei Scan on $filename"
-            nuclei -l "$filename" -t "$home_dir/nuclei-templates" -rl 05 -o "nuclei_scan.txt"
+            nuclei -l "$filename" -t "$home_dir/nuclei-templates" -es info -rl 05 -o "nuclei_scan.txt"
             ;;
         *)
             echo "Invalid scan type. Please specify a valid scan type."
