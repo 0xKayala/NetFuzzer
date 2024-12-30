@@ -142,7 +142,7 @@ fi
 # Execute scans
 run_scan() {
     local target_input=$1
-    local output_file="${scan_name}_$(date +%Y%m%d_%H%M%S).txt"
+    local output_file="${scan_name}_${target_input//[:\/]/_}.txt"
 
     case $scan_name in
         live_hosts)
@@ -164,10 +164,10 @@ run_scan() {
             sudo nmap -Pn -sV --script ssl-enum-ciphers -p 443 "$target_input" -oN "$output_file"
             ;;
         smb_enum)
-            smbclient -L "\\$target_input\\"
+            smbclient -L "\\$target_input\\" > "$output_file"
             ;;
         rpc_enum)
-            rpcclient -U "" -N "$target_input"
+            rpcclient -U "" -N "$target_input" > "$output_file"
             ;;
         vuln_scan)
             sudo nmap -Pn --script vuln -sV "$target_input" -oN "$output_file"
