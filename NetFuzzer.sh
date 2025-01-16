@@ -152,10 +152,10 @@ run_scan() {
             nmap -R -sL "$target_input" -oN "$output_file"
             ;;
         port_scan)
-            sudo nmap -Pn -sC -sV -T4 -A -O "$target_input" -oN "$output_file"
+            nmap -Pn -sC -sV -T4 -A -O "$target_input" -oN "$output_file"
             ;;
         os_detection)
-            sudo nmap -O "$target_input" -oN "$output_file"
+            nmap -O "$target_input" -oN "$output_file"
             ;;
         traceroute)
             nmap --traceroute "$target_input" -oN "$output_file"
