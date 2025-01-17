@@ -2,6 +2,8 @@
 
 # ANSI color codes
 RED='\033[91m'
+GREEN='\033[92m'
+YELLOW='\033[93m'
 RESET='\033[0m'
 
 # ASCII art
@@ -12,7 +14,7 @@ cat << "EOF"
            ____  ___  / /_/ __/_  __________  ___  _____
           / __ \/ _ \/ __/ /_/ / / /_  /_  / / _ \/ ___/
          / / / /  __/ /_/ __/ /_/ / / /_/ /_/  __/ /    
-        /_/ /_/\___/\__/_/  \__,_/ /___/___/\___/_/   v1.1.0
+        /_/ /_/\___/\__/_/  \__,_/ /___/___/\___/_/   v1.2.0
         
                                        Made by Satya Prakash (0xKayala)                 
 
@@ -22,12 +24,12 @@ echo -e "${RESET}"
 # Help menu
 display_help() {
     cat << EOF
-NetFuzzer is a comprehensive network security assessment tool for internal/external networks including firewalls, routers, switches, Active Directory, SMBs, etc.
+NetFuzzer: A comprehensive network security assessment tool for internal/external networks including firewalls, routers, switches, Active Directory, SMBs, etc.
 
 Usage: $0 [options]
 
 Options:
-  -h, --help              Display help information
+  -h, --help              Display this help menu
   -t, --target <target>   Target IP address, range, or hostname
   -f, --filename <file>   File containing a list of targets (one per line)
   -s, --scan <scan_type>  Specify the type of scan to run:
@@ -41,6 +43,7 @@ Options:
                           8. rpc_enum         - Perform RPC enumeration
                           9. vuln_scan        - Perform vulnerability scan
                          10. nuclei_scan      - Perform Nuclei scan
+  -o, --output <dir>      Specify output directory (default: ./results)
 EOF
     exit 0
 }
@@ -50,7 +53,7 @@ check_dependencies() {
     dependencies=("nuclei" "httpx" "nmap" "smbclient" "rpcclient" "go" "git")
     for dep in "${dependencies[@]}"; do
         if ! command -v "$dep" &>/dev/null; then
-            echo "Installing $dep..."
+            echo -e "${YELLOW}Installing missing dependency: $dep...${RESET}"
             case $dep in
                 nuclei|httpx)
                     go install -v github.com/projectdiscovery/$dep/cmd/$dep@latest
@@ -71,11 +74,14 @@ check_dependencies() {
         fi
     done
 
-    # Clone nuclei templates if not present
+    # Clone/update nuclei templates
     local nuclei_dir="$HOME/nuclei-templates"
     if [ ! -d "$nuclei_dir" ]; then
-        echo "Cloning Nuclei templates..."
+        echo -e "${YELLOW}Cloning Nuclei templates...${RESET}"
         git clone https://github.com/projectdiscovery/nuclei-templates.git "$nuclei_dir"
+    else
+        echo -e "${GREEN}Updating Nuclei templates...${RESET}"
+        git -C "$nuclei_dir" pull
     fi
 }
 
@@ -83,6 +89,7 @@ check_dependencies() {
 check_dependencies
 
 # Parse command line arguments
+output_dir="./results"
 while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
@@ -101,8 +108,12 @@ while [[ $# -gt 0 ]]; do
             scan_type="$2"
             shift; shift
             ;;
+        -o|--output)
+            output_dir="$2"
+            shift; shift
+            ;;
         *)
-            echo "Unknown option: $key"
+            echo -e "${RED}Unknown option: $key${RESET}"
             display_help
             ;;
     esac
@@ -110,14 +121,17 @@ done
 
 # Argument validation
 if [ -z "$target" ] && [ -z "$filename" ]; then
-    echo "Error: You must provide a target (-t) or a filename (-f)."
+    echo -e "${RED}Error: You must provide a target (-t) or a filename (-f).${RESET}"
     display_help
 fi
 
 if [ -z "$scan_type" ]; then
-    echo "Error: You must specify a scan type (-s)."
+    echo -e "${RED}Error: You must specify a scan type (-s).${RESET}"
     display_help
 fi
+
+# Ensure output directory exists
+mkdir -p "$output_dir"
 
 # Define scan types
 declare -A scans=(
@@ -135,14 +149,14 @@ declare -A scans=(
 
 scan_name=${scans[$scan_type]}
 if [ -z "$scan_name" ]; then
-    echo "Error: Invalid scan type."
+    echo -e "${RED}Error: Invalid scan type.${RESET}"
     display_help
 fi
 
 # Execute scans
 run_scan() {
     local target_input=$1
-    local output_file="${scan_name}_${target_input//[:\/]/_}.txt"
+    local output_file="$output_dir/${scan_name}_${target_input//[:\//]/_}.txt"
 
     case $scan_name in
         live_hosts)
@@ -177,9 +191,10 @@ run_scan() {
             ;;
     esac
 
-    echo "Results saved to $output_file"
+    echo -e "${GREEN}Results saved to $output_file${RESET}"
 }
 
+# Process targets
 if [ -n "$target" ]; then
     run_scan "$target"
 elif [ -n "$filename" ]; then
@@ -188,4 +203,4 @@ elif [ -n "$filename" ]; then
     done < <(sort -u "$filename")
 fi
 
-echo "Network Security Assessment completed. Happy Scanning!"
+echo -e "${GREEN}Network Security Assessment completed. Happy Scanning!${RESET}"
