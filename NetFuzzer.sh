@@ -12,7 +12,7 @@ cat << "EOF"
            ____  ___  / /_/ __/_  __________  ___  _____
           / __ \/ _ \/ __/ /_/ / / /_  /_  / / _ \/ ___/
          / / / /  __/ /_/ __/ /_/ / / /_/ /_/  __/ /    
-        /_/ /_/\___/\__/_/  \__,_/ /___/___/\___/_/   v1.1.0
+        /_/ /_/\___/\__/_/  \__,_/ /___/___/\___/_/   v1.2.0
         
                                        Made by Satya Prakash (0xKayala)                 
 
@@ -41,6 +41,7 @@ Options:
                           8. rpc_enum         - Perform RPC enumeration
                           9. vuln_scan        - Perform vulnerability scan
                          10. nuclei_scan      - Perform Nuclei scan
+                         11. brute_force      - Perform brute-forcing (SSH/HTTP)
 EOF
     exit 0
 }
@@ -131,6 +132,7 @@ declare -A scans=(
     [8]="rpc_enum"
     [9]="vuln_scan"
     [10]="nuclei_scan"
+    [11]="brute_force"
 )
 
 scan_name=${scans[$scan_type]}
@@ -142,7 +144,7 @@ fi
 # Execute scans
 run_scan() {
     local target_input=$1
-    local output_file="${scan_name}_${target_input//[:\/]/_}.txt"
+    local output_file="${scan_name}_${target_input//[:\//]/_}.txt"
 
     case $scan_name in
         live_hosts)
@@ -174,6 +176,9 @@ run_scan() {
             ;;
         nuclei_scan)
             nuclei -u "$target_input" -t "$HOME/nuclei-templates" -es info -rl 5 -o "$output_file"
+            ;;
+        brute_force)
+            hydra -L users.txt -P passwords.txt -t 4 "$target_input" > "$output_file"
             ;;
     esac
 
