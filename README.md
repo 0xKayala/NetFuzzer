@@ -53,5 +53,5 @@ Options:
 To install `NetFuzzer`, follow these steps:
 
 ```
-git clone https://github.com/0xKayala/NetFuzzer.git && cd NetFuzzer && sudo chmod +x install.sh && ./install.sh && netfuzzer -h && cd ..
+git clone https://github.com/0xKayala/NetFuzzer.git && cd NetFuzzer && sudo chmod +x install.sh && ./install.sh && (command -v netfuzzer &> /dev/null && netfuzzer -h || echo "Installation failed: Command 'netfuzzer' not found. Please check for errors during installation.") && cd .. || echo "Failed to clone or navigate to NetFuzzer repository. Please check your setup."
 ```
