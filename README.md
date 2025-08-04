@@ -25,27 +25,31 @@ netfuzzer -h
 This will display help for the tool. Here are the options it supports.
 
 ```console
-NetFuzzer is a comprehensive network security assessment tool for internal/external networks including firewalls, routers, switches, Active Directory, SMBs, etc.
-
+NetFuzzer is a comprehensive network security assessment tool for internal/external networks including firewalls, routers, switches, Active Directory & SMBs, etc.
 
 Usage: /usr/bin/netfuzzer [options]
-
 
 Options:
   -h, --help              Display help information
   -t, --target <target>   Target IP address, range, or hostname
-  -f, --filename <file>   File containing list of targets (one per line)
+  -f, --filename <file>   File containing a list of targets (one per line)
   -s, --scan <scan_type>  Specify the type of scan to run:
-                          1. live_hosts - Discover live hosts
-                          2. reverse_dns - Perform reverse DNS lookup
-                          3. port_scan - Scan ports and detect versions
-                          4. os_detection - Detect OS
-                          5. traceroute - Perform traceroute
-                          6. ssl_enum - Perform SSL enumeration
-                          7. smb_enum - Perform SMB enumeration
-                          8. rpc_enum - Perform RPC enumeration
-                          9. vuln_scan - Perform vulnerability scan"
-                          10. nuclei_scan - Perform Nuclei scan"
+                          1.  live_hosts       - Discover live hosts
+                          2.  reverse_dns      - Perform reverse DNS lookup
+                          3.  port_scan        - Scan ports and detect versions
+                          4.  os_detection     - Detect OS
+                          5.  traceroute       - Perform traceroute
+                          6.  ssl_enum         - Perform SSL enumeration
+                          7.  smb_enum         - Perform SMB enumeration
+                          8.  rpc_enum         - Perform RPC enumeration
+                          9.  vuln_scan        - Perform vulnerability scan
+                         10.  nuclei_scan      - Perform Nuclei scan
+                         11.  brute_force      - Perform brute-forcing (SSH/HTTP)
+                         12.  ftp_enum         - Check FTP anonymous login
+                         13.  enum4linux       - Deep Windows SMB/AD enumeration
+                         14.  nbtscan          - NetBIOS hostname/IP discovery
+                         15.  nikto_scan       - Web server vulnerability scan
+                         16.  msf_stub         - Metasploit module reference
 ```  
 
 ## Installation:
